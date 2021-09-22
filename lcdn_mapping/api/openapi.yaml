@@ -1,0 +1,2232 @@
+openapi: 3.0.0
+info:
+  description: LCDN Mapping API
+  title: lcdn-mapping
+  version: v1
+servers:
+- description: AMC server
+  url: https://{amc_hostname}:{amc_port}/api/lcdn-mapping/v1
+  variables:
+    amc_hostname:
+      default: aura.akamai.com
+      description: FQDN of AMC.
+    amc_port:
+      default: "443"
+      description: AMC port.
+paths:
+  /site-maps:
+    get:
+      description: |
+        List site maps: This operation returns a list of all configured site maps.
+      operationId: listSiteMaps
+      parameters:
+      - description: The `view` parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `filter` parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `sortBy` parameter may be used to specify the sort order
+          of the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `pageNumber` parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with `pageSize`.  Page number
+          offset is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The `pageSize` parameter may be used to specify the returned
+          results.  Useful to use in conjunction with `pageNumber`.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.collection.json
+              schema:
+                $ref: '#/components/schemas/site-map.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: SiteMap collection
+    post:
+      description: |
+        Create a new site map: This operation creates a new site map instance.
+      operationId: createSiteMap
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/site-map.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/lcdn-mapping/v1/site-maps/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: SiteMap collection
+  /access-maps/validate:
+    post:
+      description: |
+        Validate an access map: This operation validates an Access Map, and may be used to ensure
+        correct syntax when preparing to apply a map.
+      operationId: validateAccessMap
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_1'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/access-map.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content: {}
+          description: The map was successfully validated.
+      security:
+      - oauth2: []
+      summary: /validate
+  /geoip-configs/{geoIpConfigId}/geoip-config:
+    get:
+      description: |
+        Get a GeoIP config content: This operation gets the details of a GeoIP configuration.
+      operationId: readGeoIpConfigContent
+      parameters:
+      - description: |
+          Uniquely identifies a GeoIP configuration instance.
+        explode: false
+        in: path
+        name: geoIpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            text/csv:
+              example:
+                $ref: examples/geoip-config.config
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: GeoIpConfig Instance GeoIP configuration.
+    put:
+      description: |
+        Update a GeoIpConfig Instance GeoIP configuration: This operation updates the content of a
+        GeoIP configuration.
+      operationId: updateGeoIpConfigContent
+      parameters:
+      - description: |
+          Uniquely identifies a GeoIP configuration instance.
+        explode: false
+        in: path
+        name: geoIpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          text/csv:
+            example:
+              $ref: examples/geoip-config.config
+            schema:
+              type: string
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: 204 response
+      security:
+      - oauth2: []
+      summary: GeoIpConfig Instance GeoIP configuration.
+  /bgp-configs/{bgpConfigId}/bgp-config:
+    get:
+      description: |
+        Get a BGP config content: This operation gets the details of a BGP configuration.
+      operationId: readBgpConfigContent
+      parameters:
+      - description: |
+          Uniquely identifies a BGP configuration instance.
+        explode: false
+        in: path
+        name: bgpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              example:
+                $ref: examples/bgp-config.config
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: BgpConfig Instance BGP configuration.
+    put:
+      description: |
+        Update a BgpConfig Instance BGP configuration: This operation updates the content of a
+        BGP configuration.
+      operationId: updateBgpConfigContent
+      parameters:
+      - description: |
+          Uniquely identifies a BGP configuration instance.
+        explode: false
+        in: path
+        name: bgpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/bgp-config.config
+            schema:
+              type: string
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: 204 response
+      security:
+      - oauth2: []
+      summary: BgpConfig Instance BGP configuration.
+  /bgp-configs:
+    get:
+      description: |
+        List BGP configurations: This operation returns a list of all BGP configurations.
+      operationId: listBgpConfigs
+      parameters:
+      - description: The `view` parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `filter` parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `sortBy` parameter may be used to specify the sort order
+          of the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `pageNumber` parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with `pageSize`.  Page number
+          offset is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The `pageSize` parameter may be used to specify the returned
+          results.  Useful to use in conjunction with `pageNumber`.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.collection.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: BgpConfig collection
+    post:
+      description: |
+        Create a new BGP configuration: This operation creates a new BGP configuration instance.
+      operationId: createBgpConfig
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_2'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/bgp-config.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/lcdn-mapping/v1/bgp-configs/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: BgpConfig collection
+  /access-maps/{mapId}:
+    delete:
+      description: |
+        Remove an access map: This operation removes an access map.
+      operationId: deleteAccessMap
+      parameters:
+      - description: |
+          Uniquely identifies an access map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The access map instance was successfully removed.
+      security:
+      - oauth2: []
+      summary: AccessMap Instance.
+    get:
+      description: |
+        Get an access map: This operation gets the details of an access map instance.
+      operationId: readAccessMap
+      parameters:
+      - description: |
+          Uniquely identifies an access map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.read.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AccessMap Instance.
+    put:
+      description: |
+        Update an access map: This operation updates the details of an access map instance.
+      operationId: updateAccessMap
+      parameters:
+      - description: |
+          Uniquely identifies an access map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/access-map.read.json
+            schema:
+              $ref: '#/components/schemas/access-map.update'
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/access-map.update'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.read.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AccessMap Instance.
+  /geoip-configs:
+    get:
+      description: |
+        List GeoIP configurations: This operation returns a list of all GeoIP configurations.
+      operationId: listGeoIpConfigs
+      parameters:
+      - description: The `view` parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `filter` parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `sortBy` parameter may be used to specify the sort order
+          of the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `pageNumber` parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with `pageSize`.  Page number
+          offset is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The `pageSize` parameter may be used to specify the returned
+          results.  Useful to use in conjunction with `pageNumber`.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.collection.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: GeoIpConfig collection
+    post:
+      description: |
+        Create a new GeoIP configuration: This operation creates a new GeoIP configuration instance.
+      operationId: createGeoIpConfig
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_3'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/geoip-config.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/lcdn-mapping/v1/geoip-configs/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: GeoIpConfig collection
+  /geoip-configs/{geoIpConfigId}:
+    delete:
+      description: |
+        Remove a GeoIP configuration: This operation removes a GeoIP configuration instance.
+      operationId: deleteGeoIpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a GeoIP configuration instance.
+        explode: false
+        in: path
+        name: geoIpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The GeoIP configuration instance was successfully removed.
+      security:
+      - oauth2: []
+      summary: GeoIpConfig Instance.
+    get:
+      description: |
+        Get a GeoIP configuration: This operation retrieves the details of a GeoIP configuration instance.
+      operationId: readGeoIpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a GeoIP configuration instance.
+        explode: false
+        in: path
+        name: geoIpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: GeoIpConfig Instance.
+    put:
+      description: |
+        Update a GeoIP configuration: This operation updates the details of a GeoIP configuration instance.
+      operationId: updateGeoIpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a GeoIP configuration instance.
+        explode: false
+        in: path
+        name: geoIpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/geoip-config.update.json
+            schema:
+              $ref: '#/components/schemas/geoip-config.update'
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/geoip-config.update'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: GeoIpConfig Instance.
+  /site-maps/{mapId}/map:
+    get:
+      description: |
+        Get a site map content: This operation gets the content of a site map instance.
+      operationId: readSiteMapContent
+      parameters:
+      - description: |
+          Uniquely identifies a site map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              example:
+                $ref: examples/site-map.map
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: SiteMap Instance Map Content.
+    put:
+      description: |
+        Update a site map content: This operation updates the content of a site map instance.
+      operationId: updateSiteMapContent
+      parameters:
+      - description: |
+          Uniquely identifies a site map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/site-map.read.json
+            schema:
+              type: string
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: 204 response
+      security:
+      - oauth2: []
+      summary: SiteMap Instance Map Content.
+  /site-maps/{mapId}:
+    delete:
+      description: |
+        Remove a site map: This operation removes a site map instance.
+      operationId: deleteSiteMap
+      parameters:
+      - description: |
+          Uniquely identifies a site map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The site map instance was successfully removed.
+      security:
+      - oauth2: []
+      summary: SiteMap Instance.
+    get:
+      description: |
+        Get a site map: This operation gets the details of a site map instance.
+      operationId: readSiteMap
+      parameters:
+      - description: |
+          Uniquely identifies a site map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: SiteMap Instance.
+    put:
+      description: |
+        Update a site map: This operation updates the details of a site map instance.
+      operationId: updateSiteMap
+      parameters:
+      - description: |
+          Uniquely identifies a site map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/site-map.read.json
+            schema:
+              $ref: '#/components/schemas/site-map.update'
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/site-map.update'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: SiteMap Instance.
+  /site-maps/validate:
+    post:
+      description: |
+        Validates a site map: This operation validates a site map, and may be used to ensure correct syntax when preparing to apply a map.
+      operationId: validateSiteMap
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_4'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/site-map.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content: {}
+          description: The map was successfully validated.
+      security:
+      - oauth2: []
+      summary: /validate
+  /bgp-configs/{bgpConfigId}:
+    delete:
+      description: |
+        Remove a BGP configuration: This operation removes a BGP configuration instance.
+      operationId: deleteBgpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a BGP configuration instance.
+        explode: false
+        in: path
+        name: bgpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The BGP configuration instance was successfully removed.
+      security:
+      - oauth2: []
+      summary: BgpConfig Instance.
+    get:
+      description: |
+        Get a BGP configuration: This operation gets the details of a BGP configuration instance.
+      operationId: readBgpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a BGP configuration instance.
+        explode: false
+        in: path
+        name: bgpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: BgpConfig Instance.
+    put:
+      description: |
+        Update a BGP configuration: This operation updates the details of a BGP configuration instance.
+      operationId: updateBgpConfig
+      parameters:
+      - description: |
+          Uniquely identifies a BGP configuration instance.
+        explode: false
+        in: path
+        name: bgpConfigId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/bgp-config.update.txt
+            schema:
+              $ref: '#/components/schemas/bgp-config.update'
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/bgp-config.update'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: BgpConfig Instance.
+  /access-maps/{mapId}/map:
+    get:
+      description: |
+        Get a access map content: This operation gets the details of a access map instance.
+      operationId: readAccessMapContent
+      parameters:
+      - description: |
+          Uniquely identifies an access map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            text/plain:
+              example:
+                $ref: examples/access-map.map
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: AccessMap Instance Map Content.
+    put:
+      description: |
+        Update a site map content: This operation updates the content of a site map instance.
+      operationId: updateAccessMapContent
+      parameters:
+      - description: |
+          Uniquely identifies an access map instance.
+        explode: false
+        in: path
+        name: mapId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/site-map.read.json
+            schema:
+              type: string
+        required: true
+      responses:
+        "204":
+          content: {}
+          description: 204 response
+      security:
+      - oauth2: []
+      summary: AccessMap Instance Map Content.
+  /access-maps:
+    get:
+      description: |
+        List access maps: This operation returns a list of all configured access maps.
+      operationId: listAccessMaps
+      parameters:
+      - description: The `view` parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `filter` parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `sortBy` parameter may be used to specify the sort order
+          of the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The `pageNumber` parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with `pageSize`.  Page number
+          offset is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The `pageSize` parameter may be used to specify the returned
+          results.  Useful to use in conjunction with `pageNumber`.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.collection.json
+              schema:
+                $ref: '#/components/schemas/access-map.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: AccessMap collection
+    post:
+      description: |
+        Create a new access map: This operation creates a new Access Map instance.
+      operationId: createAccessMap
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_5'
+        content:
+          multipart/form-data:
+            encoding:
+              metadata:
+                contentType: application/json
+                style: form
+              config:
+                contentType: text/plain
+                style: form
+            schema:
+              properties:
+                metadata:
+                  $ref: '#/components/schemas/access-map.create'
+                config: {}
+              type: object
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.read.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/lcdn-mapping/v1/access-maps/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: AccessMap collection
+components:
+  requestBodies:
+    inline_object_1:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object_1'
+      required: true
+    inline_object:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+      required: true
+    inline_object_5:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object_5'
+      required: true
+    inline_object_4:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object_4'
+      required: true
+    inline_object_3:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object_3'
+      required: true
+    inline_object_2:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object_2'
+      required: true
+  schemas:
+    bgp-config.update:
+      description: BGP config update schema.
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    bgp-config.read-detailed:
+      description: BGP configuration object descriptions.
+      example:
+        lastUpdated: 2000-01-23T04:56:07.000+00:00
+        dateCreated: 2000-01-23T04:56:07.000+00:00
+        bgpConfigId: 1
+        name: name
+        description: description
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        dateCreated:
+          description: Timestamp of when the configuration was created.
+          format: date-time
+          readOnly: true
+          type: string
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        lastUpdated:
+          description: Timestamp of when the configuration was last updated.
+          format: date-time
+          readOnly: true
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    bgp-config.collection:
+      description: BGP config collection.
+      example:
+        bgpConfigs:
+        - bgpConfigId: 1
+          name: name
+        - bgpConfigId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        bgpConfigs:
+          items:
+            $ref: '#/components/schemas/bgp-config_3'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - bgpConfigs
+      - page
+      type: object
+    bgp-config.read-summary:
+      description: BGP config summary read schema.
+      example:
+        bgpConfigId: 1
+        name: name
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    site-map.create:
+      description: Site Map create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    geoip-config.read-detailed:
+      description: GeoIP configuration object.
+      example:
+        lastUpdated: 2000-01-23T04:56:07.000+00:00
+        dateCreated: 2000-01-23T04:56:07.000+00:00
+        name: name
+        description: description
+        geoIpConfigId: 1
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        geoIpConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        lastUpdated:
+          description: Timestamp of when the configuration was last updated.
+          format: date-time
+          readOnly: true
+          type: string
+        dateCreated:
+          description: Timestamp of when the configuration was created.
+          format: date-time
+          readOnly: true
+          type: string
+        type:
+          $ref: '#/components/schemas/typeType'
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    access-map.read-summary:
+      description: Access Map summary read schema.
+      example:
+        name: name
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config.collection:
+      description: GeoIP config collection.
+      example:
+        bgpConfigs:
+        - geoipConfigId: 1
+          name: name
+        - geoipConfigId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        bgpConfigs:
+          items:
+            $ref: '#/components/schemas/geoip-config_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - geoIpConfigs
+      - page
+      type: object
+    access-map.update:
+      description: Access Map update schema.
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    access-map.create:
+      description: Access Map create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    bgp-config.create:
+      description: BGP config create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    access-map.read-detailed:
+      description: Access Map object definitions.
+      example:
+        name: name
+        description: description
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    site-map.read-detailed:
+      description: Site map object descriptions.
+      example:
+        name: name
+        description: description
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config.read-summary:
+      description: GeoIP config summary read schema.
+      example:
+        geoipConfigId: 1
+        name: name
+      properties:
+        geoipConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    site-map.read-summary:
+      description: Site map summary read schema.
+      example:
+        name: name
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    site-map.collection:
+      description: Site Map collection.
+      example:
+        maps:
+        - name: name
+          mapId: 1
+        - name: name
+          mapId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        maps:
+          items:
+            $ref: '#/components/schemas/site-map_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - maps
+      - page
+      type: object
+    site-map.update:
+      description: Site Map update schema.
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config.create:
+      description: GeoIP config create schema.
+      properties:
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      - type
+      type: object
+    access-map.collection:
+      description: Access Map collection.
+      example:
+        maps:
+        - name: name
+          mapId: 1
+        - name: name
+          mapId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        maps:
+          items:
+            $ref: '#/components/schemas/access-map'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - maps
+      - page
+      type: object
+    geoip-config.update:
+      description: GeoIP config update schema.
+      properties:
+        geoIpConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    bgp-config:
+      description: BGP config update schema.
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    bgp-config_1:
+      description: BGP configuration object descriptions.
+      example:
+        lastUpdated: 2000-01-23T04:56:07.000+00:00
+        dateCreated: 2000-01-23T04:56:07.000+00:00
+        bgpConfigId: 1
+        name: name
+        description: description
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        dateCreated:
+          description: Timestamp of when the configuration was created.
+          format: date-time
+          readOnly: true
+          type: string
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        lastUpdated:
+          description: Timestamp of when the configuration was last updated.
+          format: date-time
+          readOnly: true
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    bgp-config_2:
+      description: BGP config collection.
+      example:
+        bgpConfigs:
+        - bgpConfigId: 1
+          name: name
+        - bgpConfigId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        bgpConfigs:
+          items:
+            $ref: '#/components/schemas/bgp-config_3'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - bgpConfigs
+      - page
+      type: object
+    bgp-config_3:
+      description: BGP config summary read schema.
+      example:
+        bgpConfigId: 1
+        name: name
+      properties:
+        bgpConfigId:
+          description: The unique identifier for a BGP configuration.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - bgpConfigId
+      - name
+      type: object
+    site-map:
+      description: Site Map create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    geoip-config:
+      description: GeoIP configuration object.
+      example:
+        lastUpdated: 2000-01-23T04:56:07.000+00:00
+        dateCreated: 2000-01-23T04:56:07.000+00:00
+        name: name
+        description: description
+        geoIpConfigId: 1
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        geoIpConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        lastUpdated:
+          description: Timestamp of when the configuration was last updated.
+          format: date-time
+          readOnly: true
+          type: string
+        dateCreated:
+          description: Timestamp of when the configuration was created.
+          format: date-time
+          readOnly: true
+          type: string
+        type:
+          $ref: '#/components/schemas/typeType'
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    access-map:
+      description: Access Map summary read schema.
+      example:
+        name: name
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config_1:
+      description: GeoIP config collection.
+      example:
+        bgpConfigs:
+        - geoipConfigId: 1
+          name: name
+        - geoipConfigId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        bgpConfigs:
+          items:
+            $ref: '#/components/schemas/geoip-config_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - geoIpConfigs
+      - page
+      type: object
+    access-map_1:
+      description: Access Map update schema.
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    access-map_2:
+      description: Access Map create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    bgp-config_4:
+      description: BGP config create schema.
+      properties:
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      type: object
+    access-map_3:
+      description: Access Map object definitions.
+      example:
+        name: name
+        description: description
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    site-map_1:
+      description: Site map object descriptions.
+      example:
+        name: name
+        description: description
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config_2:
+      description: GeoIP config summary read schema.
+      example:
+        geoipConfigId: 1
+        name: name
+      properties:
+        geoipConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    site-map_2:
+      description: Site map summary read schema.
+      example:
+        name: name
+        mapId: 1
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    site-map_3:
+      description: Site Map collection.
+      example:
+        maps:
+        - name: name
+          mapId: 1
+        - name: name
+          mapId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        maps:
+          items:
+            $ref: '#/components/schemas/site-map_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - maps
+      - page
+      type: object
+    site-map_4:
+      description: Site Map update schema.
+      properties:
+        mapId:
+          description: The unique identifier for an entity.
+          minimum: 1
+          type: integer
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - mapId
+      - name
+      type: object
+    geoip-config_3:
+      description: GeoIP config create schema.
+      properties:
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - name
+      - type
+      type: object
+    access-map_4:
+      description: Access Map collection.
+      example:
+        maps:
+        - name: name
+          mapId: 1
+        - name: name
+          mapId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        maps:
+          items:
+            $ref: '#/components/schemas/access-map'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - maps
+      - page
+      type: object
+    geoip-config_4:
+      description: GeoIP config update schema.
+      properties:
+        geoIpConfigId:
+          description: The unique identifier for a GeoIP configuration.
+          minimum: 1
+          type: integer
+        type:
+          $ref: '#/components/schemas/typeType'
+        name:
+          description: A unique name for the entity.
+          maxLength: 128
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+        description:
+          description: A description for the entity.
+          maxLength: 256
+          minLength: 1
+          pattern: '[a-zA-z0-9\-_]*'
+          type: string
+      required:
+      - geoIpConfigId
+      - name
+      - type
+      type: object
+    bgpConfigIdType:
+      description: The unique identifier for a BGP configuration.
+      minimum: 1
+      type: integer
+    nameType:
+      description: A unique name for the entity.
+      maxLength: 128
+      minLength: 1
+      pattern: '[a-zA-z0-9\-_]*'
+      type: string
+    descriptionType:
+      description: A description for the entity.
+      maxLength: 256
+      minLength: 1
+      pattern: '[a-zA-z0-9\-_]*'
+      type: string
+    dateCreatedType:
+      description: Timestamp of when the configuration was created.
+      format: date-time
+      readOnly: true
+      type: string
+    lastUpdatedType:
+      description: Timestamp of when the configuration was last updated.
+      format: date-time
+      readOnly: true
+      type: string
+    pageType:
+      description: Common page properties for search results.
+      example:
+        totalResults: 1
+        pageNumber: 5
+        totalPages: 6
+        pageSize: 5
+      properties:
+        totalPages:
+          description: Indicates the total number of pages, taking the pages size
+            into consideration.
+          type: integer
+        totalResults:
+          description: Indicates the total number of results from the search.
+          type: integer
+        pageNumber:
+          description: Indicates the page number of the current results, given the
+            page size.
+          type: integer
+        pageSize:
+          description: Indicates the page size for the current results.
+          type: integer
+      required:
+      - pageNumber
+      - pageSize
+    geoIpConfigIdType:
+      description: The unique identifier for a GeoIP configuration.
+      minimum: 1
+      type: integer
+    typeType:
+      description: Type of GeoIP data. Specifies the address type used in the GeoIP
+        configuration file. `IPV4` indicates the GeoIP configuration file uses an
+        IPv4 address. `IPV6` indicates the GeoIP configuration file uses an IPv6 address.
+      enum:
+      - IPV4
+      - IPV6
+      type: string
+    mapIdType:
+      description: The unique identifier for an entity.
+      minimum: 1
+      type: integer
+    inline_object:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/site-map.create'
+        config: {}
+      type: object
+    inline_object_1:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/access-map.create'
+        config: {}
+      type: object
+    inline_object_2:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/bgp-config.create'
+        config: {}
+      type: object
+    inline_object_3:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/geoip-config.create'
+        config: {}
+      type: object
+    inline_object_4:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/site-map.create'
+        config: {}
+      type: object
+    inline_object_5:
+      properties:
+        metadata:
+          $ref: '#/components/schemas/access-map.create'
+        config: {}
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: /api/identity/v1/oauth/token
+      type: oauth2
