@@ -1,4 +1,4 @@
-module git.source.akamai.com/bbuderma/aura-clientlib-golang/lcdn_mapping
+module github.com/buderman/aura-clientlib-golang/lcdn_mapping
 
 go 1.13
 
