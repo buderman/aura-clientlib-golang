@@ -1,4 +1,4 @@
-module git.source.akamai.com/bbuderma/aura-clientlib-golang/content_delivery
+module github.com/buderman/aura-clientlib-golang/content_delivery
 
 go 1.13
 
