@@ -1,0 +1,1867 @@
+openapi: 3.0.0
+info:
+  description: Infrastructure API
+  title: infrastructure
+  version: v1
+servers:
+- description: AMC server
+  url: https://{amc_hostname}:{amc_port}/api/infrastructure/v1
+  variables:
+    amc_hostname:
+      default: aura.akamai.com
+      description: FQDN of AMC.
+    amc_port:
+      default: "443"
+      description: AMC port.
+paths:
+  /nodes:
+    get:
+      description: |
+        List nodes: This operation returns a list of all configured
+        nodes.
+      operationId: listNodes
+      parameters:
+      - description: The view parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The filter parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The sortBy parameter may be used to specify the sort order of
+          the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The pageNumber parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with pageSize.  Page number offset
+          is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The pageSize parameter may be used to specify the page size of
+          the returned results.  Useful to use in conjunction with pageNumber.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/nodes-get-success.json
+              schema:
+                $ref: '#/components/schemas/node.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: Nodes
+    post:
+      description: |
+        Create a new node: This operation creates a new node.
+      operationId: createNode
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/node-create.json
+            schema:
+              $ref: '#/components/schemas/node.create'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/nodes-get-success.json
+              schema:
+                $ref: '#/components/schemas/node.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/infrastructure/v1/nodes/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: Nodes
+  /sites/{siteId}:
+    delete:
+      description: |
+        Remove a site: Remove a site.
+      operationId: deleteSite
+      parameters:
+      - description: |
+          Uniquely identifies a site.
+        explode: false
+        in: path
+        name: siteId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The site was successfully removed.
+      security:
+      - oauth2: []
+      summary: Site Instance.
+    get:
+      description: |
+        Get a site: This operation retrieves the details of a site.
+      operationId: readSite
+      parameters:
+      - description: |
+          Uniquely identifies a site.
+        explode: false
+        in: path
+        name: siteId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-get-success.json
+              schema:
+                $ref: '#/components/schemas/site.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: Site Instance.
+    put:
+      description: |
+        Update a site: This operation updates the details of a site.
+      operationId: updateSite
+      parameters:
+      - description: |
+          Uniquely identifies a site.
+        explode: false
+        in: path
+        name: siteId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/site-get-success.json
+            schema:
+              $ref: '#/components/schemas/site.update'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/site-get-success.json
+              schema:
+                $ref: '#/components/schemas/site.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: Site Instance.
+  /attribute-types/settings:
+    get:
+      description: |
+        Get settings: This operation gets the configured attribute type settings which are a set of values the CDN Operator creates to apply to an attribute type.
+      operationId: readAttributeTypeSettings
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-type-settings.json
+              schema:
+                $ref: '#/components/schemas/attribute-type-settings'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AttributeType Settings
+    put:
+      description: |
+        Update settings: This operation updates attribute type settings which are a set of values the CDN Operator creates to apply to an attribute type.
+      operationId: updateAttributeTypeSettings
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/attribute-type-settings.json
+            schema:
+              $ref: '#/components/schemas/attribute-type-settings'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-type-settings.json
+              schema:
+                $ref: '#/components/schemas/attribute-type-settings'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AttributeType Settings
+  /nodes/{nodeId}:
+    delete:
+      description: |
+        Remove a node: This operation removes a node.
+      operationId: deleteNode
+      parameters:
+      - description: |
+          Uniquely identifies a node.
+        explode: false
+        in: path
+        name: nodeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The node was successfully removed.
+      security:
+      - oauth2: []
+      summary: Node Instance.
+    get:
+      description: |
+        Get a node: This operation retrieves the details of a node.
+      operationId: readNode
+      parameters:
+      - description: |
+          Uniquely identifies a node.
+        explode: false
+        in: path
+        name: nodeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/node-get-success.json
+              schema:
+                $ref: '#/components/schemas/node.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: Node Instance.
+    put:
+      description: |
+        Update a node: This operation updates the details of a node.
+      operationId: updateNode
+      parameters:
+      - description: |
+          Uniquely identifies a node.
+        explode: false
+        in: path
+        name: nodeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/node-get-success.json
+            schema:
+              $ref: '#/components/schemas/node.update'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/node-get-success.json
+              schema:
+                $ref: '#/components/schemas/node.read-detailed'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: Node Instance.
+  /sites:
+    get:
+      description: |
+        List sites: This operation returns a list of all configured
+        sites.
+      operationId: listSites
+      parameters:
+      - description: The view parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The filter parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The sortBy parameter may be used to specify the sort order of
+          the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The pageNumber parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with pageSize.  Page number offset
+          is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The pageSize parameter may be used to specify the page size of
+          the returned results.  Useful to use in conjunction with pageNumber.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/sites-get-success.json
+              schema:
+                $ref: '#/components/schemas/site.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: Sites
+    post:
+      description: |
+        Create a new site: This operation creates a new site.
+      operationId: createSite
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/site-create.json
+            schema:
+              $ref: '#/components/schemas/site.create'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/sites-get-success.json
+              schema:
+                $ref: '#/components/schemas/site.read-detailed'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header will specify a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/infrastructure/v1/sites/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: Sites
+  /nodes/boot-medium:
+    get:
+      description: |
+        Get a node boot image: Before you install a service node, you must create a Service Node Installation Image on a USB device. You can create either a USB image or an ISO image. Each new LCDN or LMS service node boots the first time from the Service Node Installation Image to install the required service node software on each service node. After the installation is complete, you must remove the USB device so that from that point forward the node boots off its hard disk.
+      operationId: readNodeBootMedium
+      parameters:
+      - description: |
+          `usb` or `iso`.
+        explode: true
+        in: query
+        name: format
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/octet-stream: {}
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: NodeBootMedium
+  /attribute-types/{attributeTypeId}:
+    delete:
+      description: |
+        Remove an attribute type: This operation removes an attribute type.  A CDN Operator has the option to create a global set of node attribute types that provide additional node information to CDN Operators, IT, or support organizations. Removing an attribute type removes that attribute type and its values from all nodes to which it is assigned.
+      operationId: deleteAttributeType
+      parameters:
+      - description: |
+          Uniquely identifies an attribute type.
+        explode: false
+        in: path
+        name: attributeTypeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          content: {}
+          description: The attribute type was successfully removed.
+      security:
+      - oauth2: []
+      summary: AttributeType Instance.
+    get:
+      description: |
+        Get an attribute type: This operation retrieves the details of an attribute type.
+      operationId: readAttributeType
+      parameters:
+      - description: |
+          Uniquely identifies an attribute type.
+        explode: false
+        in: path
+        name: attributeTypeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-type-full.json
+              schema:
+                $ref: '#/components/schemas/attribute-type.read'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AttributeType Instance.
+    put:
+      description: |
+        Update an attribute type: This operation updates the details of an attribute type.  A CDN Operator has the option to create a global set of node attribute types that provide additional node information to CDN Operators, IT, or support organizations.
+      operationId: updateAttributeType
+      parameters:
+      - description: |
+          Uniquely identifies an attribute type.
+        explode: false
+        in: path
+        name: attributeTypeId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/attribute-type-full.json
+            schema:
+              $ref: '#/components/schemas/attribute-type.update'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-type-full.json
+              schema:
+                $ref: '#/components/schemas/attribute-type.read'
+          description: |
+            An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+      security:
+      - oauth2: []
+      summary: AttributeType Instance.
+  /attribute-types:
+    get:
+      description: |
+        List attribute types: This operation returns a list of all
+        configured attribute types.
+      operationId: listAttributeTypes
+      parameters:
+      - description: The view parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The filter parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The sortBy parameter may be used to specify the sort order of
+          the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The pageNumber parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with pageSize.  Page number offset
+          is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The pageSize parameter may be used to specify the page size of
+          the returned results.  Useful to use in conjunction with pageNumber.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-types-get-success.json
+              schema:
+                $ref: '#/components/schemas/attribute-type.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: Attribute types
+    post:
+      description: |
+        Create a new attribute type: This operation creates a new attribute type. A CDN Operator has the option to create a global set of node attribute types that provide additional node information to CDN Operators, IT, or support organizations.
+      operationId: createAttributeType
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/attribute-type-post.json
+            schema:
+              $ref: '#/components/schemas/attribute-type.create'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/attribute-type-full.json
+              schema:
+                $ref: '#/components/schemas/attribute-type.read'
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new <<resourcePathName | !singularize>> object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              description: |
+                The location header specifies a URI pointing to the newly created resource.
+              example: https://akzz-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/api/infrastructure/v1/attribute-types/1
+              explode: false
+              schema:
+                type: string
+              style: simple
+      security:
+      - oauth2: []
+      summary: Attribute types
+  /sites/{siteId}/nodes:
+    get:
+      description: |
+        List nodes per site: This operation lists the nodes belonging to this site.
+      operationId: listSiteNodes
+      parameters:
+      - description: |
+          Uniquely identifies a site.
+        explode: false
+        in: path
+        name: siteId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/nodes-get-success.json
+              schema:
+                $ref: '#/components/schemas/node.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: nodes per site
+components:
+  schemas:
+    node.read-detailed:
+      description: Node read detailed schema.
+      example:
+        interfaces:
+        - null
+        - null
+        - null
+        - null
+        - null
+        hostname: hostname
+        siteId: 1
+        attributes:
+        - '{}'
+        - '{}'
+        - '{}'
+        - '{}'
+        - '{}'
+        dnsServers:
+        - dnsServers
+        - dnsServers
+        nodeId: 1
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - administrativeState
+      - bootState
+      - dnsServers
+      - hostname
+      - interfaces
+      - nodeId
+      - siteId
+      type: object
+    site.create:
+      description: ' A site assigns a name to a group of nodes.'
+      properties:
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      type: object
+    site.collection:
+      description: Site collection.
+      example:
+        sites:
+        - name: name
+          siteId: 1
+        - name: name
+          siteId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        sites:
+          items:
+            $ref: '#/components/schemas/site_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - page
+      - sites
+      type: object
+    node.read-summary:
+      description: Node read summary schema.
+      example:
+        hostname: hostname
+        nodeId: 1
+      properties:
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+      required:
+      - hostname
+      - nodeId
+      type: object
+    site.read-summary:
+      description: Site summary view schema.
+      example:
+        name: name
+        siteId: 1
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+      required:
+      - name
+      - siteId
+      type: object
+    node.update:
+      description: Node update schema.
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - administrativeState
+      - bootState
+      - dnsServers
+      - hostname
+      - interfaces
+      - nodeId
+      - siteId
+      type: object
+    attribute-type.collection:
+      description: Attribute types collection.
+      example:
+        attributeTypes:
+        - attributeTypeId: 1
+          name: name
+        - attributeTypeId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        attributeTypes:
+          items:
+            $ref: '#/components/schemas/attribute-type_3'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - attributeTypes
+      - page
+      type: object
+    site.update:
+      description: Site update schema.
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      - siteId
+      type: object
+    attribute-type.update:
+      description: Attribute type update schema.
+      properties:
+        attributeTypeId:
+          description: The unique identifier for an attribute type.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - attributeTypeId
+      - name
+      type: object
+    attribute-type.create:
+      description: A CDN Operator has the option to create a global set of node attribute
+        types that provide additional node information to CDN operators, IT, or support
+        organizations.
+      properties:
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - name
+      type: object
+    attribute-type.read:
+      description: Attribute type read schema.
+      example:
+        attributeTypeId: 1
+        name: name
+      properties:
+        attributeTypeId:
+          description: The unique identifier for an attribute type.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - attributeTypeId
+      - name
+      type: object
+    attribute-type-settings:
+      description: Settings for an `attributeType`. A set of values the CDN Operator
+        creates to apply to an `attributeType`.
+      example:
+        attributeTypePriority:
+        - null
+        - null
+      properties:
+        attributeTypePriority:
+          description: Priority order of attributeTypes.
+          items:
+            $ref: '#/components/schemas/attributeTypeIdType'
+          type: array
+      type: object
+    site.read-detailed:
+      description: Site detailed read schema.
+      example:
+        name: name
+        siteId: 1
+        abbreviatedName: abbreviatedName
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      - siteId
+      type: object
+    node.create:
+      description: A node represents an aggregation of relevant parts that include
+        a list of interfaces, each containing a list of addresses and routes, and
+        a list of attribute values.
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - dnsServers
+      - hostname
+      - interfaces
+      - siteId
+      type: object
+    node.collection:
+      description: Node collection.
+      example:
+        nodes:
+        - hostname: hostname
+          nodeId: 1
+        - hostname: hostname
+          nodeId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        nodes:
+          items:
+            $ref: '#/components/schemas/node_1'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - nodes
+      - page
+      type: object
+    node:
+      description: Node read detailed schema.
+      example:
+        interfaces:
+        - null
+        - null
+        - null
+        - null
+        - null
+        hostname: hostname
+        siteId: 1
+        attributes:
+        - '{}'
+        - '{}'
+        - '{}'
+        - '{}'
+        - '{}'
+        dnsServers:
+        - dnsServers
+        - dnsServers
+        nodeId: 1
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - administrativeState
+      - bootState
+      - dnsServers
+      - hostname
+      - interfaces
+      - nodeId
+      - siteId
+      type: object
+    site:
+      description: ' A site assigns a name to a group of nodes.'
+      properties:
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      type: object
+    site_1:
+      description: Site collection.
+      example:
+        sites:
+        - name: name
+          siteId: 1
+        - name: name
+          siteId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        sites:
+          items:
+            $ref: '#/components/schemas/site_2'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - page
+      - sites
+      type: object
+    node_1:
+      description: Node read summary schema.
+      example:
+        hostname: hostname
+        nodeId: 1
+      properties:
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+      required:
+      - hostname
+      - nodeId
+      type: object
+    site_2:
+      description: Site summary view schema.
+      example:
+        name: name
+        siteId: 1
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+      required:
+      - name
+      - siteId
+      type: object
+    node_2:
+      description: Node update schema.
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        nodeId:
+          description: The unique identifier for a node.
+          minimum: 1
+          type: integer
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - administrativeState
+      - bootState
+      - dnsServers
+      - hostname
+      - interfaces
+      - nodeId
+      - siteId
+      type: object
+    attribute-type:
+      description: Attribute types collection.
+      example:
+        attributeTypes:
+        - attributeTypeId: 1
+          name: name
+        - attributeTypeId: 1
+          name: name
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        attributeTypes:
+          items:
+            $ref: '#/components/schemas/attribute-type_3'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - attributeTypes
+      - page
+      type: object
+    site_3:
+      description: Site update schema.
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      - siteId
+      type: object
+    attribute-type_1:
+      description: Attribute type update schema.
+      properties:
+        attributeTypeId:
+          description: The unique identifier for an attribute type.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - attributeTypeId
+      - name
+      type: object
+    attribute-type_2:
+      description: A CDN Operator has the option to create a global set of node attribute
+        types that provide additional node information to CDN operators, IT, or support
+        organizations.
+      properties:
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - name
+      type: object
+    attribute-type_3:
+      description: Attribute type read schema.
+      example:
+        attributeTypeId: 1
+        name: name
+      properties:
+        attributeTypeId:
+          description: The unique identifier for an attribute type.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for an attribute type.
+          maxLength: 128
+          minLength: 1
+          type: string
+      required:
+      - attributeTypeId
+      - name
+      type: object
+    site_4:
+      description: Site detailed read schema.
+      example:
+        name: name
+        siteId: 1
+        abbreviatedName: abbreviatedName
+      properties:
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        name:
+          description: The unique name for this site.
+          maxLength: 254
+          minLength: 1
+          type: string
+        abbreviatedName:
+          description: A shortened name for this site.
+          maxLength: 50
+          minLength: 1
+          type: string
+      required:
+      - abbreviatedName
+      - name
+      - siteId
+      type: object
+    node_3:
+      description: A node represents an aggregation of relevant parts that include
+        a list of interfaces, each containing a list of addresses and routes, and
+        a list of attribute values.
+      properties:
+        bootState:
+          $ref: '#/components/schemas/bootStateType'
+        interfaces:
+          description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+            `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be
+            added.  A minimum of one and maximum of 32 ethernet interfaces must exist.  One
+            of the ethernet interfaces must contain the management address, and this
+            interface may not be part of a bond.
+          items:
+            $ref: '#/components/schemas/interfaceType'
+          maxItems: 36
+          minItems: 1
+          type: array
+        hostname:
+          description: The unique fully qualified domain name (FQDN) for this node.
+          format: hostname
+          type: string
+        siteId:
+          description: The unique identifier for a site.
+          minimum: 1
+          type: integer
+        attributes:
+          description: Array of mappings of attributeType to value for this node.
+          items:
+            description: Array of mappings of attributeType to value for this node.
+            properties:
+              attributeTypeId:
+                description: Unique identifier for attributeType.
+                type: integer
+              value:
+                description: Value to assign for this node.
+                maxLength: 256
+                minLength: 1
+                type: string
+            required:
+            - attributeTypeId
+            - value
+            type: object
+          maxItems: 20
+          type: array
+        administrativeState:
+          $ref: '#/components/schemas/administrativeStateType'
+        dnsServers:
+          description: List of DNS Server IP addresses.
+          items:
+            type: string
+          maxItems: 2
+          minItems: 1
+          type: array
+      required:
+      - dnsServers
+      - hostname
+      - interfaces
+      - siteId
+      type: object
+    node_4:
+      description: Node collection.
+      example:
+        nodes:
+        - hostname: hostname
+          nodeId: 1
+        - hostname: hostname
+          nodeId: 1
+        page:
+          totalResults: 1
+          pageNumber: 5
+          totalPages: 6
+          pageSize: 5
+      properties:
+        nodes:
+          items:
+            $ref: '#/components/schemas/node_1'
+          type: array
+        page:
+          $ref: '#/components/schemas/pageType'
+      required:
+      - nodes
+      - page
+      type: object
+    bootStateType:
+      description: When booting, the action the node should take `BOOT`, `REINSTALL`,
+        or `UPGRADE`. In `BOOT` state, the node completes a normal boot process and
+        runs in production mode. `REINSTALL` causes the node to reinstall and overwrite
+        the system partition and boot partition on all disks and the associated data,
+        but does not update the kernel partition. Do not use `UPGRADE` to upgrade
+        the software on a service node; use the upgrade_step.py script. For detailed
+        information about upgrading a service node using the upgrade_step.py script,
+        see the "Service Node Upgrade with upgrade_step.py" in the  [Aura LCDN/LMS
+        Upgrade Guide](https://control.akamai.com/wh/CUSTOMER/AKAMAI/en-US/WEBHELP/portal-guides/aura-licensed-cdn/GUID-867C3390-F48F-4845-9EDD-BDD5F917B71A.html).
+      enum:
+      - BOOT
+      - REINSTALL
+      - UPGRADE
+      type: string
+    interfaceArrayType:
+      description: List of interfaces for the node.  Bond interfaces `lag0`, `lag1`,
+        `lag2`, and `lag3` must exist.  If not supplied on a POST, they will be added.  A
+        minimum of one and maximum of 32 ethernet interfaces must exist.  One of the
+        ethernet interfaces must contain the management address, and this interface
+        may not be part of a bond.
+      items:
+        $ref: '#/components/schemas/interfaceType'
+      maxItems: 36
+      minItems: 1
+      type: array
+    hostnameType:
+      description: The unique fully qualified domain name (FQDN) for this node.
+      format: hostname
+      type: string
+    nodeIdType:
+      description: The unique identifier for a node.
+      minimum: 1
+      type: integer
+    siteIdType:
+      description: The unique identifier for a site.
+      minimum: 1
+      type: integer
+    attributesArrayType:
+      description: Array of mappings of attributeType to value for this node.
+      items:
+        description: Array of mappings of attributeType to value for this node.
+        properties:
+          attributeTypeId:
+            description: Unique identifier for attributeType.
+            type: integer
+          value:
+            description: Value to assign for this node.
+            maxLength: 256
+            minLength: 1
+            type: string
+        required:
+        - attributeTypeId
+        - value
+        type: object
+      maxItems: 20
+      type: array
+    administrativeStateType:
+      description: The administrative state of the node, either `ACTIVE` or `MAINTENANCE`.
+        The default is `ACTIVE`. Use `MAINTENANCE` to remove a node from service,
+        do routine software maintenance, or add or remove storage devices on a service
+        node.
+      enum:
+      - ACTIVE
+      - MAINTENANCE
+      type: string
+    dnsServersArrayType:
+      description: List of DNS Server IP addresses.
+      items:
+        type: string
+      maxItems: 2
+      minItems: 1
+      type: array
+    nameType:
+      description: The unique name for this site.
+      maxLength: 254
+      minLength: 1
+      type: string
+    abbreviatedNameType:
+      description: A shortened name for this site.
+      maxLength: 50
+      minLength: 1
+      type: string
+    pageType:
+      description: Common page properties for search results.
+      example:
+        totalResults: 1
+        pageNumber: 5
+        totalPages: 6
+        pageSize: 5
+      properties:
+        totalPages:
+          description: Indicates the total number of pages, taking the pages size
+            into consideration.
+          type: integer
+        totalResults:
+          description: Indicates the total number of results from the search.
+          type: integer
+        pageNumber:
+          description: Indicates the page number of the current results, given the
+            page size.
+          type: integer
+        pageSize:
+          description: Indicates the page size for the current results.
+          type: integer
+      required:
+      - pageNumber
+      - pageSize
+    attributeTypeIdType:
+      description: The unique identifier for an attribute type.
+      minimum: 1
+      type: integer
+    nameType_1:
+      description: The unique name for an attribute type.
+      maxLength: 128
+      minLength: 1
+      type: string
+    interfaceType:
+      description: Base interface type
+      discriminator:
+        mapping:
+          ETHERNET: '#/components/schemas/ethernetInterfaceType'
+          BOND: '#/components/schemas/bondInterfaceType'
+        propertyName: type
+      oneOf:
+      - $ref: '#/components/schemas/ethernetInterfaceType'
+      - $ref: '#/components/schemas/bondInterfaceType'
+    ethernetInterfaceType:
+      description: A node ethernet interface.
+      properties:
+        macAddress:
+          description: Interface MAC address.
+          pattern: ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$
+          type: string
+        name:
+          description: Interface name, such as `eth0`.
+          pattern: ^eth([1-9][0-9]|[0-9])$
+          type: string
+        ip4Routes:
+          items:
+            $ref: '#/components/schemas/route4Type'
+          maxItems: 256
+          type: array
+        ip6Routes:
+          items:
+            $ref: '#/components/schemas/route6Type'
+          maxItems: 256
+          type: array
+        ip4Addresses:
+          items:
+            $ref: '#/components/schemas/ip4AddressType'
+          maxItems: 32
+          minItems: 0
+          type: array
+        master:
+          description: Designates the master bonding interface for this interface.
+          readOnly: true
+          type: string
+        type:
+          description: Identifies the interface type. The only supported type is `ETHERNET`.
+          type: string
+        ip6Addresses:
+          items:
+            $ref: '#/components/schemas/ip6AddressType'
+          maxItems: 32
+          minItems: 0
+          type: array
+      required:
+      - macAddress
+      - name
+      - type
+      type: object
+    bondInterfaceType:
+      description: A node bonding virtual interface.
+      properties:
+        macAddress:
+          description: Interface MAC address.
+          pattern: ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$
+          type: string
+        name:
+          description: Interface name, such as `lag0`.  Service nodes may use lag0
+            - lag3 for service bonding interfaces.  For management, a single bonding
+            interface with the name lag_mgmt0 may be used.  Once created, this interface
+            may not be deleted.
+          pattern: ^(((lag)[0-3])|(lag_mgmt0))$
+          type: string
+        ip4Routes:
+          items:
+            $ref: '#/components/schemas/route4Type'
+          maxItems: 256
+          type: array
+        ip6Routes:
+          items:
+            $ref: '#/components/schemas/route6Type'
+          maxItems: 256
+          type: array
+        slaveInterfaces:
+          description: List of slave interfaces for this bond.
+          items:
+            description: Interface name of slave interface.
+            type: string
+          type: array
+        ip4Addresses:
+          items:
+            $ref: '#/components/schemas/ip4AddressType'
+          maxItems: 32
+          minItems: 0
+          type: array
+        type:
+          description: Identifies the interface type. The only supported type is `BOND`.
+          type: string
+        ip6Addresses:
+          items:
+            $ref: '#/components/schemas/ip6AddressType'
+          maxItems: 32
+          minItems: 0
+          type: array
+      required:
+      - name
+      - type
+      type: object
+    macAddressType:
+      description: Interface MAC address.
+      pattern: ^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$
+      type: string
+    route4ArrayType:
+      items:
+        $ref: '#/components/schemas/route4Type'
+      maxItems: 256
+      type: array
+    route6ArrayType:
+      items:
+        $ref: '#/components/schemas/route6Type'
+      maxItems: 256
+      type: array
+    ip4AddressArrayType:
+      items:
+        $ref: '#/components/schemas/ip4AddressType'
+      maxItems: 32
+      minItems: 0
+      type: array
+    ip6AddressArrayType:
+      items:
+        $ref: '#/components/schemas/ip6AddressType'
+      maxItems: 32
+      minItems: 0
+      type: array
+    route4Type:
+      description: A single IPv4 route.
+      properties:
+        destination:
+          description: An IPv4 address.
+          pattern: ^([01]?\d\d?|2[0-4]\d|25[0-5])(\.([01]?\d\d?|2[0-4]\d|25[0-5])){3}/(3[0-2]|[12][0-9]|[0-9])$
+          type: string
+        metric:
+          description: A value up to 9999 that represents the cost metric for this
+            static route. The route with the lowest metric is chosen among multiple
+            routes that most closely match the destination address of a packet being
+            forwarded.
+          minimum: 0
+          type: integer
+        sourceIpAddress:
+          description: The IPv4 source address for this IPv4 route.
+          format: ipv4
+          type: string
+        nextHop:
+          description: The address of the next gateway to which packets should be
+            forwarded along the path to their final destination.
+          format: ipv4
+          type: string
+      required:
+      - destination
+      - nextHop
+    route6Type:
+      description: A single IPv6 route.
+      properties:
+        destination:
+          description: An IPv6 address.
+          type: string
+        metric:
+          description: A value up to 9999 that represents the cost metric for this
+            static route. The route with the lowest metric is chosen among multiple
+            routes that most closely match the destination address of a packet being
+            forwarded.
+          minimum: 0
+          type: integer
+        sourceIpAddress:
+          description: The IPv6 source address for this IPv6 route.
+          format: ipv6
+          type: string
+        nextHop:
+          description: The address of the next gateway to which packets should be
+            forwarded along the path to their final destination.
+          format: ipv6
+          type: string
+      required:
+      - destination
+      - nextHop
+    ip4AddressType:
+      description: An IPv4 address.
+      properties:
+        management:
+          default: false
+          description: Indicates whether this is the management address.  There may
+            only be one management address.
+          type: boolean
+        ipAddress:
+          description: An IPv4 address.
+          pattern: ^([01]?\d\d?|2[0-4]\d|25[0-5])(\.([01]?\d\d?|2[0-4]\d|25[0-5])){3}/(3[0-2]|[12][0-9]|[0-9])$
+          type: string
+      required:
+      - ipAddress
+    ip6AddressType:
+      description: An IPv6 address.
+      properties:
+        ipAddress:
+          description: An IPv6 address.
+          type: string
+      required:
+      - ipAddress
+    ip4CidrType:
+      description: An IPv4 address.
+      pattern: ^([01]?\d\d?|2[0-4]\d|25[0-5])(\.([01]?\d\d?|2[0-4]\d|25[0-5])){3}/(3[0-2]|[12][0-9]|[0-9])$
+      type: string
+    ip6CidrType:
+      description: An IPv6 address.
+      type: string
+  securitySchemes:
+    oauth2:
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: /api/identity/v1/oauth/token
+      type: oauth2
