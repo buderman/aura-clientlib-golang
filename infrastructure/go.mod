@@ -1,4 +1,4 @@
-module git.source.akamai.com/bbuderma/aura-clientlib-golang/infrastructure
+module github.com/buderman/aura-clientlib-golang/infrastructure
 
 go 1.13
 

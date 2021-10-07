@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**RevokedCertificates** | **[]map[string]interface{}** |  | 
+**RevokedCertificates** | **[]interface{}** |  | 
 **NextUpdate** | **time.Time** | The date by which the next CRL will be issued. | 
 **IssuedBy** | [**X509CrlSummaryTypeIssuedBy**](X509CrlSummaryTypeIssuedBy.md) |  | 
 **ThisUpdate** | **time.Time** | The issue date of the current CRL. | 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 
 ### NewX509CrlSummaryType
 
-`func NewX509CrlSummaryType(revokedCertificates []map[string]interface{}, nextUpdate time.Time, issuedBy X509CrlSummaryTypeIssuedBy, thisUpdate time.Time, ) *X509CrlSummaryType`
+`func NewX509CrlSummaryType(revokedCertificates []interface{}, nextUpdate time.Time, issuedBy X509CrlSummaryTypeIssuedBy, thisUpdate time.Time, ) *X509CrlSummaryType`
 
 NewX509CrlSummaryType instantiates a new X509CrlSummaryType object
 This constructor will assign default values to properties that have it defined,
@@ -30,20 +30,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetRevokedCertificates
 
-`func (o *X509CrlSummaryType) GetRevokedCertificates() []map[string]interface{}`
+`func (o *X509CrlSummaryType) GetRevokedCertificates() []interface{}`
 
 GetRevokedCertificates returns the RevokedCertificates field if non-nil, zero value otherwise.
 
 ### GetRevokedCertificatesOk
 
-`func (o *X509CrlSummaryType) GetRevokedCertificatesOk() (*[]map[string]interface{}, bool)`
+`func (o *X509CrlSummaryType) GetRevokedCertificatesOk() (*[]interface{}, bool)`
 
 GetRevokedCertificatesOk returns a tuple with the RevokedCertificates field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetRevokedCertificates
 
-`func (o *X509CrlSummaryType) SetRevokedCertificates(v []map[string]interface{})`
+`func (o *X509CrlSummaryType) SetRevokedCertificates(v []interface{})`
 
 SetRevokedCertificates sets RevokedCertificates field to given value.
 

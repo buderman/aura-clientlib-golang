@@ -1,7 +1,7 @@
 /*
 infrastructure
 
-Infrastructure API
+Aura Infrastructure API
 
 API version: v1
 */

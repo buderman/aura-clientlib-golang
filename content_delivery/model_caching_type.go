@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	CACHINGTYPE_OPTIMISTIC CachingType = "OPTIMISTIC"
 )
 
-var allowedCachingTypeEnumValues = []CachingType{
+// All allowed values of CachingType enum
+var AllowedCachingTypeEnumValues = []CachingType{
 	"CONSERVATIVE",
 	"OPTIMISTIC",
 }
@@ -36,7 +37,7 @@ func (v *CachingType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := CachingType(value)
-	for _, existing := range allowedCachingTypeEnumValues {
+	for _, existing := range AllowedCachingTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewCachingTypeFromValue(v string) (*CachingType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for CachingType: valid values are %v", v, allowedCachingTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for CachingType: valid values are %v", v, AllowedCachingTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v CachingType) IsValid() bool {
-	for _, existing := range allowedCachingTypeEnumValues {
+	for _, existing := range AllowedCachingTypeEnumValues {
 		if existing == v {
 			return true
 		}

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: LCDN Mapping API
+  description: Aura LCDN Mapping API
   title: lcdn-mapping
   version: v1
 servers:

@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */

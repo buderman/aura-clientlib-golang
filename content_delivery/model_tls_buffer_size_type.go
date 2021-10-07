@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -25,7 +25,8 @@ const (
 	TLSBUFFERSIZETYPE__32 TlsBufferSizeType = 32
 )
 
-var allowedTlsBufferSizeTypeEnumValues = []TlsBufferSizeType{
+// All allowed values of TlsBufferSizeType enum
+var AllowedTlsBufferSizeTypeEnumValues = []TlsBufferSizeType{
 	4,
 	16,
 	32,
@@ -38,7 +39,7 @@ func (v *TlsBufferSizeType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := TlsBufferSizeType(value)
-	for _, existing := range allowedTlsBufferSizeTypeEnumValues {
+	for _, existing := range AllowedTlsBufferSizeTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -55,13 +56,13 @@ func NewTlsBufferSizeTypeFromValue(v int32) (*TlsBufferSizeType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for TlsBufferSizeType: valid values are %v", v, allowedTlsBufferSizeTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for TlsBufferSizeType: valid values are %v", v, AllowedTlsBufferSizeTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v TlsBufferSizeType) IsValid() bool {
-	for _, existing := range allowedTlsBufferSizeTypeEnumValues {
+	for _, existing := range AllowedTlsBufferSizeTypeEnumValues {
 		if existing == v {
 			return true
 		}

@@ -1,7 +1,7 @@
 /*
 lcdn-mapping
 
-LCDN Mapping API
+Aura LCDN Mapping API
 
 API version: v1
 */

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Infrastructure API
+  description: Aura Infrastructure API
   title: infrastructure
   version: v1
 servers:

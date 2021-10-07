@@ -1,7 +1,7 @@
 /*
 infrastructure
 
-Infrastructure API
+Aura Infrastructure API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	ADMINISTRATIVESTATETYPE_MAINTENANCE AdministrativeStateType = "MAINTENANCE"
 )
 
-var allowedAdministrativeStateTypeEnumValues = []AdministrativeStateType{
+// All allowed values of AdministrativeStateType enum
+var AllowedAdministrativeStateTypeEnumValues = []AdministrativeStateType{
 	"ACTIVE",
 	"MAINTENANCE",
 }
@@ -36,7 +37,7 @@ func (v *AdministrativeStateType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := AdministrativeStateType(value)
-	for _, existing := range allowedAdministrativeStateTypeEnumValues {
+	for _, existing := range AllowedAdministrativeStateTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewAdministrativeStateTypeFromValue(v string) (*AdministrativeStateType, er
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for AdministrativeStateType: valid values are %v", v, allowedAdministrativeStateTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for AdministrativeStateType: valid values are %v", v, AllowedAdministrativeStateTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v AdministrativeStateType) IsValid() bool {
-	for _, existing := range allowedAdministrativeStateTypeEnumValues {
+	for _, existing := range AllowedAdministrativeStateTypeEnumValues {
 		if existing == v {
 			return true
 		}

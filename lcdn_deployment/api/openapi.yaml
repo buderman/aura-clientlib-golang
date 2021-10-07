@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: LCDN Deployment API
+  description: Aura LCDN Deployment API
   title: lcdn-deployment
   version: v1
 servers:
@@ -14,6 +14,69 @@ servers:
       default: "443"
       description: AMC port.
 paths:
+  /hypercache/instances:
+    get:
+      description: |
+        List HyperCache instances: This operation returns a list of all HyperCache instances configured on the LCDN.
+      operationId: listHyperCacheInstances
+      parameters:
+      - description: The view parameter may be used to request that either the summary
+          or detailed view be returned.
+        explode: true
+        in: query
+        name: view
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The filter parameter may be used to filter the returned collection.
+        explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The sortBy parameter may be used to specify the sort order of
+          the returned collection.
+        explode: true
+        in: query
+        name: sortBy
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The pageNumber parameter may be used to specify an offset into
+          the results.  Useful to use in conjunction with pageSize.  Page number offset
+          is 1-based.
+        explode: true
+        in: query
+        name: pageNumber
+        required: false
+        schema:
+          type: integer
+        style: form
+      - description: The pageSize parameter may be used to specify the page size of
+          the returned results.  Useful to use in conjunction with pageNumber.
+        explode: true
+        in: query
+        name: pageSize
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                $ref: examples/hypercache-instance.collection.json
+              schema:
+                $ref: '#/components/schemas/hypercache-instance.collection'
+          description: 200 response
+      security:
+      - oauth2: []
+      summary: HyperCache Instances
   /request-router/instances/{nodeId}:
     delete:
       description: |
@@ -86,15 +149,6 @@ paths:
               $ref: '#/components/schemas/requestrouter-instance.update'
         required: true
       responses:
-        "201":
-          content:
-            application/json:
-              example:
-                $ref: examples/requestrouter-instance.read.json
-              schema:
-                $ref: '#/components/schemas/requestrouter-instance.read-detailed'
-          description: |
-            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
         "200":
           content:
             application/json:
@@ -104,72 +158,18 @@ paths:
                 $ref: '#/components/schemas/requestrouter-instance.read-detailed'
           description: |
             An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
-      security:
-      - oauth2: []
-      summary: RequestRouter Instance.
-  /hypercache/instances:
-    get:
-      description: |
-        List HyperCache instances: This operation returns a list of all HyperCache instances configured on the LCDN.
-      operationId: listHyperCacheInstances
-      parameters:
-      - description: The view parameter may be used to request that either the summary
-          or detailed view be returned.
-        explode: true
-        in: query
-        name: view
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: The filter parameter may be used to filter the returned collection.
-        explode: true
-        in: query
-        name: filter
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: The sortBy parameter may be used to specify the sort order of
-          the returned collection.
-        explode: true
-        in: query
-        name: sortBy
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: The pageNumber parameter may be used to specify an offset into
-          the results.  Useful to use in conjunction with pageSize.  Page number offset
-          is 1-based.
-        explode: true
-        in: query
-        name: pageNumber
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: The pageSize parameter may be used to specify the page size of
-          the returned results.  Useful to use in conjunction with pageNumber.
-        explode: true
-        in: query
-        name: pageSize
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
+        "201":
           content:
             application/json:
               example:
-                $ref: examples/hypercache-instance.collection.json
+                $ref: examples/requestrouter-instance.read.json
               schema:
-                $ref: '#/components/schemas/hypercache-instance.collection'
-          description: 200 response
+                $ref: '#/components/schemas/requestrouter-instance.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
       security:
       - oauth2: []
-      summary: HyperCache Instances
+      summary: RequestRouter Instance.
   /request-router/instances:
     get:
       description: |
@@ -259,15 +259,6 @@ paths:
               $ref: '#/components/schemas/hypercache-instance.update'
         required: true
       responses:
-        "201":
-          content:
-            application/json:
-              example:
-                $ref: examples/hypercache-instance.read.json
-              schema:
-                $ref: '#/components/schemas/hypercache-instance.read-detailed'
-          description: |
-            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
         "200":
           content:
             application/json:
@@ -277,6 +268,15 @@ paths:
                 $ref: '#/components/schemas/hypercache-instance.read-detailed'
           description: |
             An HTTP 200 will signify the successful update of an <<resourcePathName | !singularize>> instance.
+        "201":
+          content:
+            application/json:
+              example:
+                $ref: examples/hypercache-instance.read.json
+              schema:
+                $ref: '#/components/schemas/hypercache-instance.read-detailed'
+          description: |
+            An HTTP 204 will signify the successful deletion of an <<resourcePathName | !singularize>> instance.
       security:
       - oauth2: []
       summary: HyperCache Instance.
@@ -287,6 +287,7 @@ components:
       properties:
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType'
@@ -297,7 +298,7 @@ components:
       description: HPC instance summary read schema.
       example:
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a HyperCache node.
@@ -305,6 +306,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
       required:
       - hostname
@@ -318,7 +320,7 @@ components:
           - clientServing
           - clientServing
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a node.
@@ -326,6 +328,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType'
@@ -337,9 +340,9 @@ components:
       example:
         instances:
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         page:
           totalResults: 1
           pageNumber: 5
@@ -360,7 +363,7 @@ components:
       description: Request Router instance summary read schema.
       example:
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a node.
@@ -368,6 +371,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
       required:
       - hostname
@@ -381,6 +385,7 @@ components:
             bandwidth on a node, in megabits per second. Request Router compares the
             bandwidth usage for each node with the maximum configured limit to help
             determine node availability.
+          minimum: 1
           type: integer
         cachingMemoryOverrideMB:
           description: A value that you assign to the HyperCache node to override
@@ -391,13 +396,17 @@ components:
             the automatically calculated memory. However, if you choose to override
             the caching memory, we strongly recommend that you first contact [Akamai
             Technical Support](https://control.akamai.com/apps/support-ui/#/contact-support).
+          minimum: 1
           type: integer
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
         license:
           description: The license for a particular HyperCache instance. The minimum
             length is 1 and the maximum length is 32767.
+          maxLength: 32767
+          minLength: 1
           type: string
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType_1'
@@ -418,11 +427,11 @@ components:
           - intraSite
           interSite:
           - interSite
-        clientServingBandwidthLimitMbps: 5
+        clientServingBandwidthLimitMbps: 1
         license: license
         hostname: hostname
         nodeId: 1
-        cachingMemoryOverrideMB: 0
+        cachingMemoryOverrideMB: 1
       properties:
         cachingMemoryOverrideMB:
           description: A value that you assign to the HyperCache node to override
@@ -433,12 +442,15 @@ components:
             the automatically calculated memory. However, if you choose to override
             the caching memory, we strongly recommend that you first contact [Akamai
             Technical Support](https://control.akamai.com/apps/support-ui/#/contact-support).
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType_1'
         license:
           description: The license for a particular HyperCache instance. The minimum
             length is 1 and the maximum length is 32767.
+          maxLength: 32767
+          minLength: 1
           type: string
         hostname:
           description: The unique fully qualified domain name for a HyperCache node.
@@ -446,12 +458,14 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
         clientServingBandwidthLimitMbps:
           description: A value that determines the maximum client-serving interface
             bandwidth on a node, in megabits per second. Request Router compares the
             bandwidth usage for each node with the maximum configured limit to help
             determine node availability.
+          minimum: 1
           type: integer
       required:
       - license
@@ -462,9 +476,9 @@ components:
       example:
         instances:
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         page:
           totalResults: 1
           pageNumber: 5
@@ -486,6 +500,7 @@ components:
       properties:
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType'
@@ -496,7 +511,7 @@ components:
       description: HPC instance summary read schema.
       example:
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a HyperCache node.
@@ -504,6 +519,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
       required:
       - hostname
@@ -517,7 +533,7 @@ components:
           - clientServing
           - clientServing
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a node.
@@ -525,6 +541,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType'
@@ -536,9 +553,9 @@ components:
       example:
         instances:
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         page:
           totalResults: 1
           pageNumber: 5
@@ -559,7 +576,7 @@ components:
       description: Request Router instance summary read schema.
       example:
         hostname: hostname
-        nodeId: 0
+        nodeId: 1
       properties:
         hostname:
           description: The unique fully qualified domain name for a node.
@@ -567,6 +584,7 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a Request Router node.
+          minimum: 1
           type: integer
       required:
       - hostname
@@ -580,6 +598,7 @@ components:
             bandwidth on a node, in megabits per second. Request Router compares the
             bandwidth usage for each node with the maximum configured limit to help
             determine node availability.
+          minimum: 1
           type: integer
         cachingMemoryOverrideMB:
           description: A value that you assign to the HyperCache node to override
@@ -590,13 +609,17 @@ components:
             the automatically calculated memory. However, if you choose to override
             the caching memory, we strongly recommend that you first contact [Akamai
             Technical Support](https://control.akamai.com/apps/support-ui/#/contact-support).
+          minimum: 1
           type: integer
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
         license:
           description: The license for a particular HyperCache instance. The minimum
             length is 1 and the maximum length is 32767.
+          maxLength: 32767
+          minLength: 1
           type: string
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType_1'
@@ -617,11 +640,11 @@ components:
           - intraSite
           interSite:
           - interSite
-        clientServingBandwidthLimitMbps: 5
+        clientServingBandwidthLimitMbps: 1
         license: license
         hostname: hostname
         nodeId: 1
-        cachingMemoryOverrideMB: 0
+        cachingMemoryOverrideMB: 1
       properties:
         cachingMemoryOverrideMB:
           description: A value that you assign to the HyperCache node to override
@@ -632,12 +655,15 @@ components:
             the automatically calculated memory. However, if you choose to override
             the caching memory, we strongly recommend that you first contact [Akamai
             Technical Support](https://control.akamai.com/apps/support-ui/#/contact-support).
+          minimum: 1
           type: integer
         serviceLabels:
           $ref: '#/components/schemas/serviceLabelsType_1'
         license:
           description: The license for a particular HyperCache instance. The minimum
             length is 1 and the maximum length is 32767.
+          maxLength: 32767
+          minLength: 1
           type: string
         hostname:
           description: The unique fully qualified domain name for a HyperCache node.
@@ -645,12 +671,14 @@ components:
           type: string
         nodeId:
           description: The unique identifier for a HyperCache node.
+          minimum: 1
           type: integer
         clientServingBandwidthLimitMbps:
           description: A value that determines the maximum client-serving interface
             bandwidth on a node, in megabits per second. Request Router compares the
             bandwidth usage for each node with the maximum configured limit to help
             determine node availability.
+          minimum: 1
           type: integer
       required:
       - license
@@ -661,9 +689,9 @@ components:
       example:
         instances:
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         - hostname: hostname
-          nodeId: 0
+          nodeId: 1
         page:
           totalResults: 1
           pageNumber: 5
@@ -682,6 +710,7 @@ components:
       type: object
     nodeIdType:
       description: The unique identifier for a Request Router node.
+      minimum: 1
       type: integer
     serviceLabelsType:
       description: Service label definitions for a Request Router instance.
@@ -706,6 +735,7 @@ components:
       type: string
     nodeIdType_1:
       description: The unique identifier for a HyperCache node.
+      minimum: 1
       type: integer
     nodeHostnameType_1:
       description: The unique fully qualified domain name for a node.
@@ -740,6 +770,7 @@ components:
       description: A value that determines the maximum client-serving interface bandwidth
         on a node, in megabits per second. Request Router compares the bandwidth usage
         for each node with the maximum configured limit to help determine node availability.
+      minimum: 1
       type: integer
     cachingMemoryOverrideMBType:
       description: A value that you assign to the HyperCache node to override the
@@ -749,10 +780,13 @@ components:
         affect the CDN. You should not have to override the automatically calculated
         memory. However, if you choose to override the caching memory, we strongly
         recommend that you first contact [Akamai Technical Support](https://control.akamai.com/apps/support-ui/#/contact-support).
+      minimum: 1
       type: integer
     licenseType:
       description: The license for a particular HyperCache instance. The minimum length
         is 1 and the maximum length is 32767.
+      maxLength: 32767
+      minLength: 1
       type: string
     serviceLabelsType_1:
       description: Service label definitions for a HyperCache instance.

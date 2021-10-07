@@ -1,7 +1,7 @@
 /*
 lcdn-mapping
 
-LCDN Mapping API
+Aura LCDN Mapping API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	TYPETYPE_IPV6 TypeType = "IPV6"
 )
 
-var allowedTypeTypeEnumValues = []TypeType{
+// All allowed values of TypeType enum
+var AllowedTypeTypeEnumValues = []TypeType{
 	"IPV4",
 	"IPV6",
 }
@@ -36,7 +37,7 @@ func (v *TypeType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := TypeType(value)
-	for _, existing := range allowedTypeTypeEnumValues {
+	for _, existing := range AllowedTypeTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewTypeTypeFromValue(v string) (*TypeType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for TypeType: valid values are %v", v, allowedTypeTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for TypeType: valid values are %v", v, AllowedTypeTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v TypeType) IsValid() bool {
-	for _, existing := range allowedTypeTypeEnumValues {
+	for _, existing := range AllowedTypeTypeEnumValues {
 		if existing == v {
 			return true
 		}

@@ -1,7 +1,7 @@
 /*
 lcdn-deployment
 
-LCDN Deployment API
+Aura LCDN Deployment API
 
 API version: v1
 */

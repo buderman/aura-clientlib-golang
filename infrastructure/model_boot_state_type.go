@@ -1,7 +1,7 @@
 /*
 infrastructure
 
-Infrastructure API
+Aura Infrastructure API
 
 API version: v1
 */
@@ -25,7 +25,8 @@ const (
 	BOOTSTATETYPE_UPGRADE BootStateType = "UPGRADE"
 )
 
-var allowedBootStateTypeEnumValues = []BootStateType{
+// All allowed values of BootStateType enum
+var AllowedBootStateTypeEnumValues = []BootStateType{
 	"BOOT",
 	"REINSTALL",
 	"UPGRADE",
@@ -38,7 +39,7 @@ func (v *BootStateType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := BootStateType(value)
-	for _, existing := range allowedBootStateTypeEnumValues {
+	for _, existing := range AllowedBootStateTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -55,13 +56,13 @@ func NewBootStateTypeFromValue(v string) (*BootStateType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for BootStateType: valid values are %v", v, allowedBootStateTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for BootStateType: valid values are %v", v, AllowedBootStateTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v BootStateType) IsValid() bool {
-	for _, existing := range allowedBootStateTypeEnumValues {
+	for _, existing := range AllowedBootStateTypeEnumValues {
 		if existing == v {
 			return true
 		}

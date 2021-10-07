@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	EDGEHOSTTYPE_AEX EdgeHostType = "AEX"
 )
 
-var allowedEdgeHostTypeEnumValues = []EdgeHostType{
+// All allowed values of EdgeHostType enum
+var AllowedEdgeHostTypeEnumValues = []EdgeHostType{
 	"HTTP",
 	"AEX",
 }
@@ -36,7 +37,7 @@ func (v *EdgeHostType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := EdgeHostType(value)
-	for _, existing := range allowedEdgeHostTypeEnumValues {
+	for _, existing := range AllowedEdgeHostTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewEdgeHostTypeFromValue(v string) (*EdgeHostType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for EdgeHostType: valid values are %v", v, allowedEdgeHostTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for EdgeHostType: valid values are %v", v, AllowedEdgeHostTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v EdgeHostType) IsValid() bool {
-	for _, existing := range allowedEdgeHostTypeEnumValues {
+	for _, existing := range AllowedEdgeHostTypeEnumValues {
 		if existing == v {
 			return true
 		}

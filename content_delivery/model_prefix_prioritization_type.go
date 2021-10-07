@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -25,7 +25,8 @@ const (
 	PREFIXPRIORITIZATIONTYPE_LOW PrefixPrioritizationType = "LOW"
 )
 
-var allowedPrefixPrioritizationTypeEnumValues = []PrefixPrioritizationType{
+// All allowed values of PrefixPrioritizationType enum
+var AllowedPrefixPrioritizationTypeEnumValues = []PrefixPrioritizationType{
 	"HIGH",
 	"MEDIUM",
 	"LOW",
@@ -38,7 +39,7 @@ func (v *PrefixPrioritizationType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := PrefixPrioritizationType(value)
-	for _, existing := range allowedPrefixPrioritizationTypeEnumValues {
+	for _, existing := range AllowedPrefixPrioritizationTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -55,13 +56,13 @@ func NewPrefixPrioritizationTypeFromValue(v string) (*PrefixPrioritizationType, 
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for PrefixPrioritizationType: valid values are %v", v, allowedPrefixPrioritizationTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for PrefixPrioritizationType: valid values are %v", v, AllowedPrefixPrioritizationTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v PrefixPrioritizationType) IsValid() bool {
-	for _, existing := range allowedPrefixPrioritizationTypeEnumValues {
+	for _, existing := range AllowedPrefixPrioritizationTypeEnumValues {
 		if existing == v {
 			return true
 		}

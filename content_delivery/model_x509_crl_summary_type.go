@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -17,7 +17,7 @@ import (
 
 // X509CrlSummaryType struct for X509CrlSummaryType
 type X509CrlSummaryType struct {
-	RevokedCertificates []map[string]interface{} `json:"revokedCertificates"`
+	RevokedCertificates []interface{} `json:"revokedCertificates"`
 	// The date by which the next CRL will be issued.
 	NextUpdate time.Time `json:"nextUpdate"`
 	IssuedBy X509CrlSummaryTypeIssuedBy `json:"issuedBy"`
@@ -29,7 +29,7 @@ type X509CrlSummaryType struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewX509CrlSummaryType(revokedCertificates []map[string]interface{}, nextUpdate time.Time, issuedBy X509CrlSummaryTypeIssuedBy, thisUpdate time.Time) *X509CrlSummaryType {
+func NewX509CrlSummaryType(revokedCertificates []interface{}, nextUpdate time.Time, issuedBy X509CrlSummaryTypeIssuedBy, thisUpdate time.Time) *X509CrlSummaryType {
 	this := X509CrlSummaryType{}
 	this.RevokedCertificates = revokedCertificates
 	this.NextUpdate = nextUpdate
@@ -47,9 +47,9 @@ func NewX509CrlSummaryTypeWithDefaults() *X509CrlSummaryType {
 }
 
 // GetRevokedCertificates returns the RevokedCertificates field value
-func (o *X509CrlSummaryType) GetRevokedCertificates() []map[string]interface{} {
+func (o *X509CrlSummaryType) GetRevokedCertificates() []interface{} {
 	if o == nil {
-		var ret []map[string]interface{}
+		var ret []interface{}
 		return ret
 	}
 
@@ -58,7 +58,7 @@ func (o *X509CrlSummaryType) GetRevokedCertificates() []map[string]interface{} {
 
 // GetRevokedCertificatesOk returns a tuple with the RevokedCertificates field value
 // and a boolean to check if the value has been set.
-func (o *X509CrlSummaryType) GetRevokedCertificatesOk() (*[]map[string]interface{}, bool) {
+func (o *X509CrlSummaryType) GetRevokedCertificatesOk() (*[]interface{}, bool) {
 	if o == nil  {
 		return nil, false
 	}
@@ -66,7 +66,7 @@ func (o *X509CrlSummaryType) GetRevokedCertificatesOk() (*[]map[string]interface
 }
 
 // SetRevokedCertificates sets field value
-func (o *X509CrlSummaryType) SetRevokedCertificates(v []map[string]interface{}) {
+func (o *X509CrlSummaryType) SetRevokedCertificates(v []interface{}) {
 	o.RevokedCertificates = v
 }
 

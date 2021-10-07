@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	DELIVERYOVERRIDETYPE_DISABLE DeliveryOverrideType = "DISABLE"
 )
 
-var allowedDeliveryOverrideTypeEnumValues = []DeliveryOverrideType{
+// All allowed values of DeliveryOverrideType enum
+var AllowedDeliveryOverrideTypeEnumValues = []DeliveryOverrideType{
 	"DEFAULT",
 	"DISABLE",
 }
@@ -36,7 +37,7 @@ func (v *DeliveryOverrideType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := DeliveryOverrideType(value)
-	for _, existing := range allowedDeliveryOverrideTypeEnumValues {
+	for _, existing := range AllowedDeliveryOverrideTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewDeliveryOverrideTypeFromValue(v string) (*DeliveryOverrideType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for DeliveryOverrideType: valid values are %v", v, allowedDeliveryOverrideTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for DeliveryOverrideType: valid values are %v", v, AllowedDeliveryOverrideTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v DeliveryOverrideType) IsValid() bool {
-	for _, existing := range allowedDeliveryOverrideTypeEnumValues {
+	for _, existing := range AllowedDeliveryOverrideTypeEnumValues {
 		if existing == v {
 			return true
 		}

@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	ECDHCURVETYPE_PRIME256_V1 EcdhCurveType = "PRIME256V1"
 )
 
-var allowedEcdhCurveTypeEnumValues = []EcdhCurveType{
+// All allowed values of EcdhCurveType enum
+var AllowedEcdhCurveTypeEnumValues = []EcdhCurveType{
 	"SECP384R1",
 	"PRIME256V1",
 }
@@ -36,7 +37,7 @@ func (v *EcdhCurveType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := EcdhCurveType(value)
-	for _, existing := range allowedEcdhCurveTypeEnumValues {
+	for _, existing := range AllowedEcdhCurveTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewEcdhCurveTypeFromValue(v string) (*EcdhCurveType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for EcdhCurveType: valid values are %v", v, allowedEcdhCurveTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for EcdhCurveType: valid values are %v", v, AllowedEcdhCurveTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v EcdhCurveType) IsValid() bool {
-	for _, existing := range allowedEcdhCurveTypeEnumValues {
+	for _, existing := range AllowedEcdhCurveTypeEnumValues {
 		if existing == v {
 			return true
 		}

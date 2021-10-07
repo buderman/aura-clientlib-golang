@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: Cotent Delivery API
+  description: Aura LCDN Content Delivery API
   title: content-delivery
   version: v1
 servers:

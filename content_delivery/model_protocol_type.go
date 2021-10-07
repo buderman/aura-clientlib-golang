@@ -1,7 +1,7 @@
 /*
 content-delivery
 
-Cotent Delivery API
+Aura LCDN Content Delivery API
 
 API version: v1
 */
@@ -24,7 +24,8 @@ const (
 	PROTOCOLTYPE_HTTPS ProtocolType = "HTTPS"
 )
 
-var allowedProtocolTypeEnumValues = []ProtocolType{
+// All allowed values of ProtocolType enum
+var AllowedProtocolTypeEnumValues = []ProtocolType{
 	"HTTP",
 	"HTTPS",
 }
@@ -36,7 +37,7 @@ func (v *ProtocolType) UnmarshalJSON(src []byte) error {
 		return err
 	}
 	enumTypeValue := ProtocolType(value)
-	for _, existing := range allowedProtocolTypeEnumValues {
+	for _, existing := range AllowedProtocolTypeEnumValues {
 		if existing == enumTypeValue {
 			*v = enumTypeValue
 			return nil
@@ -53,13 +54,13 @@ func NewProtocolTypeFromValue(v string) (*ProtocolType, error) {
 	if ev.IsValid() {
 		return &ev, nil
 	} else {
-		return nil, fmt.Errorf("invalid value '%v' for ProtocolType: valid values are %v", v, allowedProtocolTypeEnumValues)
+		return nil, fmt.Errorf("invalid value '%v' for ProtocolType: valid values are %v", v, AllowedProtocolTypeEnumValues)
 	}
 }
 
 // IsValid return true if the value is valid for the enum, false otherwise
 func (v ProtocolType) IsValid() bool {
-	for _, existing := range allowedProtocolTypeEnumValues {
+	for _, existing := range AllowedProtocolTypeEnumValues {
 		if existing == v {
 			return true
 		}
